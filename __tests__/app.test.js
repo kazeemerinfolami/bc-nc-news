@@ -52,3 +52,40 @@ describe("/api/topics", () => {
       });
   });
 });
+
+describe("/api/articles", () => {
+  test("GET 200 - respond with an object containing all the articles", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((res) => {
+        const { articles } = res.body;
+        //if article is an array
+        expect(articles).toBeInstanceOf(Array);
+        //length to be 12
+        expect(articles.length).toBe(12);
+        //for each article object should match the test object
+        articles.forEach((article) => {
+          expect(article).toMatchObject({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            comment_count: expect.any(Number),
+          });
+        });
+      });
+  });
+  //   test("GET: 200 - the array of articles is sorted by date by default", () => {
+  //     return request(app)
+  //       .get("/api/articles")
+  //       .expect(200)
+  //       .then((res) => {
+  //         const { articles } = res.body;
+  //         expect(articles).toBeSortedBy("created_at");
+  //       });
+  //   });
+});
