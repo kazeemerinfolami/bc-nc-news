@@ -92,3 +92,43 @@ describe("/api/articles", () => {
       });
   });
 });
+
+describe("/api/articles/:article_id", () => {
+  test("GET: 200 response with an object that match the articule_id", () => {
+    const articleID = 1;
+    return request(app)
+      .get(`/api/articles/${articleID}`)
+      .expect(200)
+      .then((res) => {
+        const { article } = res.body;
+        //if article is an object
+        expect(article).toBeInstanceOf(Object);
+        //for each article object should match the test object
+        expect(article).toMatchObject({
+          article_id: expect.any(Number),
+          title: expect.any(String),
+          topic: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+        });
+      });
+  });
+  test("GET: 404 response with an err message if article_id is not found", () => {
+    return request(app)
+      .get(`/api/articles/234`)
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("article not found");
+      });
+  });
+  test("GET: 400 response with an err message: bad request", () => {
+    return request(app)
+      .get(`/api/articles/notAnId`)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("bad request!");
+      });
+  });
+});
