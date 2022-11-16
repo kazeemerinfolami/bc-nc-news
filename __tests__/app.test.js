@@ -45,10 +45,10 @@ describe("GET /api/topics", () => {
   });
 });
 
-describe("GET /gysyugysyugisuygyugsu", () => {
+describe("GET /URLNotFound", () => {
   test("GET 404 - if URL not found", () => {
     return request(app)
-      .get("/gysyugysyugisuygyugsu")
+      .get("/URLNotFound")
       .expect(404)
       .then((response) => {
         expect(response.body.msg).toBe("page does not exist");
