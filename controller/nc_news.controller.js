@@ -1,7 +1,9 @@
+const comments = require("../db/data/test-data/comments");
 const {
   fetchTopics,
   fetchArticules,
   fetchArticuleById,
+  fetchCommentsByArticle_id,
 } = require("../model/nc_news.model");
 
 exports.getTopics = (req, res, next) => {
@@ -34,3 +36,16 @@ exports.getArticuleById = (req, res, next) => {
       next(err);
     });
 };
+
+exports.getCommentsByArticle_id = (req, res, next) => {
+  const { article_id } = req.params;
+  fetchCommentsByArticle_id(article_id)
+    .then((comments) => {
+      res.status(200).send({ comments });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+// exports.post = ()
