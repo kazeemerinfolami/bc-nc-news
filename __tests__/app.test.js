@@ -23,19 +23,19 @@ afterAll(() => {
   return db.end();
 });
 
-describe("/api/topics", () => {
+describe("GET /api/topics", () => {
   test("GET 200 - respond with an object containing all the slug", () => {
     return request(app)
       .get("/api/topics")
       .expect(200)
       .then((res) => {
-        const { result } = res.body;
-        //if result is an array
-        expect(result).toBeInstanceOf(Array);
+        const { topics } = res.body;
+        //if topic is an array
+        expect(topics).toBeInstanceOf(Array);
         //length to be 3
-        expect(result.length).toBe(3);
+        expect(topics.length).toBe(3);
         //for each slug object should match the test object
-        result.forEach((slugTopic) => {
+        topics.forEach((slugTopic) => {
           expect(slugTopic).toMatchObject({
             slug: expect.any(String),
             description: expect.any(String),
@@ -43,9 +43,12 @@ describe("/api/topics", () => {
         });
       });
   });
-  test("GET 404 - if not found", () => {
+});
+
+describe("GET /URLNotFound", () => {
+  test("GET 404 - if URL not found", () => {
     return request(app)
-      .get("/api/topics/gysyugysyugisuygyugsu")
+      .get("/URLNotFound")
       .expect(404)
       .then((response) => {
         expect(response.body.msg).toBe("page does not exist");
