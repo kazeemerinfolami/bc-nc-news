@@ -11,6 +11,12 @@ app.all("/*", (req, res) => {
 });
 
 app.use((err, req, res, next) => {
+  if (err.status && err.msg) {
+    res.status(err.status).send({ msg: err.msg });
+  }
+});
+
+app.use((err, req, res, next) => {
   console.log(err);
   res.status(500).send("Server error!");
 });
