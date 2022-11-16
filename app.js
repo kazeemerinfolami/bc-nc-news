@@ -1,16 +1,16 @@
 const express = require("express");
 const {
   getTopics,
-  getArticules,
-  getArticuleById,
+  getArticles,
+  getArticleById,
   getCommentsByArticle_id,
 } = require("./controller/nc_news.controller");
 
 const app = express();
 
 app.get("/api/topics", getTopics);
-app.get("/api/articles", getArticules);
-app.get("/api/articles/:article_id", getArticuleById);
+app.get("/api/articles", getArticles);
+app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles/:article_id/comments", getCommentsByArticle_id);
 
 app.all("/*", (req, res) => {

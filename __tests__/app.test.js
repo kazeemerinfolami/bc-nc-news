@@ -94,7 +94,7 @@ describe("/api/articles", () => {
 });
 
 describe("/api/articles/:article_id", () => {
-  test("GET: 200 response with an object that match the articule_id", () => {
+  test("GET: 200 response with an object that match the article_id", () => {
     const articleID = 1;
     return request(app)
       .get(`/api/articles/${articleID}`)

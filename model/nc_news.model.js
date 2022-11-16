@@ -6,13 +6,7 @@ exports.fetchTopics = () => {
   });
 };
 
-exports.fetchArticules = () => {
-  return db.query("SELECT * FROM articles;").then((result) => {
-    return result.rows;
-  });
-};
-
-exports.fetchArticules = () => {
+exports.fetchArticles = () => {
   let addCommentCountQuery = `
     SELECT articles.*, 
     COUNT(comments.article_id)::INT AS comment_count 
@@ -26,7 +20,7 @@ exports.fetchArticules = () => {
   });
 };
 
-exports.fetchArticuleById = (article_id) => {
+exports.fetchArticleById = (article_id) => {
   if (!isNaN(article_id)) {
     return db
       .query(`SELECT * FROM articleS WHERE article_id = $1`, [article_id])
