@@ -1,10 +1,15 @@
 const express = require("express");
-const { getTopics, getArticules } = require("./controller/nc_news.controller");
+const {
+  getTopics,
+  getArticules,
+  getArticuleById,
+} = require("./controller/nc_news.controller");
 
 const app = express();
 
 app.get("/api/topics", getTopics);
 app.get("/api/articles", getArticules);
+app.get("/api/articles/:article_id", getArticuleById);
 
 app.all("/*", (req, res) => {
   res.status(404).send({ msg: "page does not exist" });
