@@ -143,6 +143,8 @@ describe("/api/articles/:article_id/comments", () => {
         const { comments } = res.body;
         //if topic is an array
         expect(comments).toBeInstanceOf(Array);
+        //comments should be served with the most recent comments first
+        expect(comments).toBeSortedBy("created_at", { descending: true });
         //for each comments object should match the test object
         comments.forEach((comment) => {
           expect(comment).toMatchObject({
