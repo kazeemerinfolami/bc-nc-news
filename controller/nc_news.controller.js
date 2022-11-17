@@ -60,3 +60,7 @@ exports.postCommentbyArticle_id = (req, res, next) => {
       next(err);
     });
 };
+
+exports.patchArticulebyArticule_id = (req, res, next) => {
+  const { article_id } = req.params;
+};

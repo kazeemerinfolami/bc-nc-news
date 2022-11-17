@@ -219,4 +219,16 @@ describe("/api/articles/:article_id/comments", () => {
         expect(res.body.msg).toBe("bad request!");
       });
   });
+  test("POST: 400 response with an err message: if an input is empty", () => {
+    const newComment = {
+      body: "Having run out of ideas for articles, I am staring at the wall blankly, like a cat. Does this make me a cat?",
+    };
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send(newComment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("all inputs are required");
+      });
+  });
 });
