@@ -176,7 +176,7 @@ describe("/api/articles/:article_id/comments", () => {
   });
 });
 
-describe("", () => {
+describe("/api/articles/:article_id/comments", () => {
   test("POST:201 inserts a new comment to the db and send the new comment back to the client", () => {
     const newComment = {
       author: "butter_bridge",
@@ -187,6 +187,14 @@ describe("", () => {
       .send(newComment)
       .expect(201)
       .then((response) => {
+        expect(response.body.comment).toMatchObject({
+          comment_id: expect.any(Number),
+          body: expect.any(String),
+          article_id: expect.any(Number),
+          author: expect.any(String),
+          votes: expect.any(Number),
+          created_at: expect.any(String),
+        });
         expect(response.body.comment).toMatchObject({
           article_id: 2,
           ...newComment,
