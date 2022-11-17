@@ -175,3 +175,40 @@ describe("/api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("", () => {
+  test("POST:201 inserts a new comment to the db and send the new comment back to the client", () => {
+    const newComment = {
+      author: "butter_bridge",
+      body: "Having run out of ideas for articles, I am staring at the wall blankly, like a cat. Does this make me a cat?",
+    };
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send(newComment)
+      .expect(201)
+      .then((response) => {
+        expect(response.body.comment).toMatchObject({
+          article_id: 2,
+          ...newComment,
+        });
+      });
+  });
+  test("POST: 404 response with an err message if article_id is not found", () => {
+    const article_id = 200;
+    return request(app)
+      .post(`/api/articles/${article_id}/comments`)
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("article not found");
+      });
+  });
+  test("POST: 400 response with an err message: bad request", () => {
+    const article_id = "notaValidId";
+    return request(app)
+      .post(`/api/articles/${article_id}/comments`)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("bad request!");
+      });
+  });
+});
