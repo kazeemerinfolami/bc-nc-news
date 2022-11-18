@@ -9,6 +9,7 @@ const {
   topicData,
   userData,
 } = require("../db/data/test-data/index");
+const { post } = require("../app.js");
 
 beforeEach(() => {
   return seed({
@@ -203,19 +204,15 @@ describe("/api/articles/:article_id/comments", () => {
         });
       });
   });
-  test("POST: 404 response with an err message if article_id is not found", () => {
-    const article_id = 200;
-    return request(app)
-      .post(`/api/articles/${article_id}/comments`)
-      .expect(404)
-      .then((res) => {
-        expect(res.body.msg).toBe("article not found");
-      });
-  });
   test("POST: 400 response with an err message: bad request", () => {
     const article_id = "notaValidId";
+    const newComment = {
+      author: "butter_bridge",
+      body: "Having run out of ideas for articles, I am staring at the wall blankly, like a cat. Does this make me a cat?",
+    };
     return request(app)
       .post(`/api/articles/${article_id}/comments`)
+      .send(newComment)
       .expect(400)
       .then((res) => {
         expect(res.body.msg).toBe("bad request!");
@@ -231,6 +228,33 @@ describe("/api/articles/:article_id/comments", () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("all inputs are required");
+      });
+  });
+  test("POST: 404 response with an err message if article_id is not found", () => {
+    const article_id = 200;
+    const newComment = {
+      author: "butter_bridge",
+      body: "Having run out of ideas for articles, I am staring at the wall blankly, like a cat. Does this make me a cat?",
+    };
+    return request(app)
+      .post(`/api/articles/${article_id}/comments`)
+      .send(newComment)
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("article not found");
+      });
+  });
+  test("POST: 404 response with bad request! if username does not exist", () => {
+    const newComment = {
+      author: "userNotFound",
+      body: "coding...",
+    };
+    return request(app)
+      .post(`/api/articles/2/comments`)
+      .send(newComment)
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("user not found");
       });
   });
 });
