@@ -137,3 +137,9 @@ exports.updateArticulebyArticule_id = (inc_votes, article_id) => {
       });
   });
 };
+
+exports.fetchUsers = () => {
+  return db.query("SELECT * FROM users;").then((result) => {
+    return result.rows;
+  });
+};
