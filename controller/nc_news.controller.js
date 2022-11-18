@@ -6,6 +6,7 @@ const {
   fetchCommentsByArticle_id,
   insertCommentbyArticle_id,
   updateArticulebyArticule_id,
+  fetchUsers,
 } = require("../model/nc_news.model");
 
 exports.getTopics = (req, res, next) => {
@@ -68,6 +69,16 @@ exports.patchArticulebyArticule_id = (req, res, next) => {
   updateArticulebyArticule_id(inc_votes, article_id)
     .then((article) => {
       res.status(201).send({ article });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.getUsers = (req, res, next) => {
+  fetchUsers()
+    .then((users) => {
+      res.status(200).send({ users });
     })
     .catch((err) => {
       next(err);
