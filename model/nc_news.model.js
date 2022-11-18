@@ -99,3 +99,41 @@ exports.insertCommentbyArticle_id = (article_id, body) => {
       });
   });
 };
+
+exports.updateArticulebyArticule_id = (inc_votes, article_id) => {
+  const incVotes = inc_votes;
+  if (isNaN(article_id)) {
+    return Promise.reject({
+      status: 400,
+      msg: "bad request!",
+    });
+  }
+  if (Object.keys(inc_votes).length === 0) {
+    return Promise.reject({
+      status: 400,
+      msg: "invalid input",
+    });
+  }
+  if (isNaN(Object.values(incVotes))) {
+    return Promise.reject({
+      status: 400,
+      msg: "invalid input",
+    });
+  }
+
+  return checkIfArticleExists(article_id).then(() => {
+    return db
+      .query(
+        `
+      UPDATE articles
+      SET votes = votes + $1
+      WHERE article_id = $2
+      RETURNING *;
+        `,
+        [incVotes.inc_votes, article_id]
+      )
+      .then((result) => {
+        return result.rows[0];
+      });
+  });
+};

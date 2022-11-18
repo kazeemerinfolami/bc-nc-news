@@ -258,3 +258,68 @@ describe("/api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("/api/articles/:article_id", () => {
+  test("PATCH: 201 update an existing article that corresponds with an exisiting article_id", () => {
+    const incVotes = { inc_votes: 2 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(incVotes)
+      .expect(201)
+      .then((res) => {
+        const { article } = res.body;
+        const updateArticle = {
+          article_id: 1,
+          title: expect.any(String),
+          topic: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          created_at: expect.any(String),
+          votes: 102,
+        };
+        expect(article).toMatchObject(updateArticle);
+      });
+  });
+  test("PATCH: 400 - bad request", () => {
+    const article_id = "notaValidId";
+    const incVotes = { inc_votes: 2 };
+    return request(app)
+      .patch(`/api/articles/${article_id}`)
+      .send(incVotes)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("bad request!");
+      });
+  });
+  test("PATCH: 404 - response with an error if article_id not found", () => {
+    const article_id = 200;
+    const incVotes = { inc_votes: 2 };
+    return request(app)
+      .patch(`/api/articles/${article_id}`)
+      .send(incVotes)
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("article not found");
+      });
+  });
+  test("PATCH: 400 response with an error message if sending an empty input", () => {
+    const incVotes = {};
+    return request(app)
+      .patch(`/api/articles/1`)
+      .send(incVotes)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("invalid input");
+      });
+  });
+  test("PATCH: 400 if passed in an invalid input type", () => {
+    const incVotes = { inc_votes: "inValidType" };
+    return request(app)
+      .patch(`/api/articles/1`)
+      .send(incVotes)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("invalid input");
+      });
+  });
+});
