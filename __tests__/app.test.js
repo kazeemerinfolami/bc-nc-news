@@ -85,11 +85,83 @@ describe("/api/articles", () => {
   });
   test("GET: 200 - can sort the articles by the specified sort_by value", () => {
     return request(app)
-      .get("/api/articles")
+      .get("/api/articles?sort_by=created_at")
       .expect(200)
       .then((res) => {
         const { articles } = res.body;
         expect(articles).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+  test("GET: 200 - can sort the articles by the specified articles topic", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes")
+      .expect(200)
+      .then((res) => {
+        const { articles } = res.body;
+        expect(articles).toBeSortedBy("votes", { descending: true });
+      });
+  });
+  test("GET: 200 - can sort the articles by the specified sort_by value", () => {
+    return request(app)
+      .get("/api/articles?sort_by=topic")
+      .expect(200)
+      .then((res) => {
+        const { articles } = res.body;
+        expect(articles).toBeSortedBy("topic", { descending: true });
+      });
+  });
+  test("GET: 200 - can sort the articles by the specified sort_by value", () => {
+    return request(app)
+      .get("/api/articles?sort_by=title")
+      .expect(200)
+      .then((res) => {
+        const { articles } = res.body;
+
+        expect(articles).toBeSortedBy("title", { descending: true });
+      });
+  });
+  test("GET - status: 200, should respond with filtered topic specified", () => {
+    return request(app)
+      .get("/api/articles/?topic=mitch")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        articles.forEach((article) => {
+          expect(article.topic).toBe("mitch");
+        });
+      });
+  });
+  test("GET - status: 200, respond with articles in ascending order when order by is provided", () => {
+    return request(app)
+      .get("/api/articles?order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toBeSortedBy("created_at");
+      });
+  });
+  test("GET - status:404, not found", () => {
+    return request(app)
+      .get("/api/articlesbadrequest")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("page does not exist");
+      });
+  });
+  test("GET: 400 - ", () => {
+    return request(app)
+      .get("/api/articles?sort_by=invalidQuery")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("invalid query!");
+      });
+  });
+  test("GET - status: 400, responds with invalid sort query ", () => {
+    return request(app)
+      .get("/api/articles?order=apple")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("invalid query!");
       });
   });
 });
