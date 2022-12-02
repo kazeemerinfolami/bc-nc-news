@@ -20,7 +20,9 @@ exports.getTopics = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-  fetchArticles()
+  const { sort_by, filter_by, order, topic } = req.query;
+  // console.log("sort_by, filter_by", sort_by, filter_by);
+  fetchArticles(sort_by, filter_by, order, topic)
     .then((articles) => {
       res.status(200).send({ articles });
     })
