@@ -7,6 +7,7 @@ const {
   postCommentbyArticle_id,
   patchArticulebyArticule_id,
   getUsers,
+  deleteCommentsById,
 } = require("./controller/nc_news.controller");
 
 const app = express();
@@ -20,6 +21,8 @@ app.get("/api/articles/:article_id/comments", getCommentsByArticle_id);
 app.post("/api/articles/:article_id/comments", postCommentbyArticle_id);
 app.patch("/api/articles/:article_id", patchArticulebyArticule_id);
 app.get("/api/users", getUsers);
+app.delete("/api/comments/:comment_id", deleteCommentsById);
+app.get("/api");
 
 app.all("/*", (req, res) => {
   res.status(404).send({ msg: "page does not exist" });
@@ -34,6 +37,13 @@ app.use((err, req, res, next) => {
 app.use((err, req, res, next) => {
   if (err.code === "22P02") {
     res.status(400).send({ msg: "bad request!" });
-  } else res.status(500).send({ msg: "Server error!" });
+  } else {
+    next(err);
+  }
 });
+
+app.use((err, req, res, next) => {
+  res.status(500).send({ msg: "Server error!" });
+});
+
 module.exports = app;

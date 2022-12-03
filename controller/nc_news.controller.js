@@ -7,6 +7,7 @@ const {
   insertCommentbyArticle_id,
   updateArticulebyArticule_id,
   fetchUsers,
+  getDeletedCommentsById,
 } = require("../model/nc_news.model");
 
 exports.getTopics = (req, res, next) => {
@@ -81,6 +82,17 @@ exports.getUsers = (req, res, next) => {
   fetchUsers()
     .then((users) => {
       res.status(200).send({ users });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.deleteCommentsById = (req, res, next) => {
+  const { comment_id } = req.params;
+  getDeletedCommentsById(comment_id)
+    .then(() => {
+      res.status(204).send({});
     })
     .catch((err) => {
       next(err);

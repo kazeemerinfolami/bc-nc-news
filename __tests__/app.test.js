@@ -415,3 +415,30 @@ describe("GET /api/users", () => {
       });
   });
 });
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("DELETE status: 204, respond with empty object", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then(({ body }) => {
+        expect(body).toEqual({});
+      });
+  });
+  test("GET status: 404, reponds with comment id not found ", () => {
+    return request(app)
+      .delete("/api/comments/999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("comment_id not found!");
+      });
+  });
+  test("GET status:400, responds with 400 bad request", () => {
+    return request(app)
+      .delete("/api/comments/NAN")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("bad request!");
+      });
+  });
+});
